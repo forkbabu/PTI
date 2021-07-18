@@ -21,7 +21,8 @@ def run_PTI(run_name='', use_wandb=False, use_multi_id_training=False):
         global_config.run_name = run_name
 
     if use_wandb:
-        run = wandb.init(project=paths_config.pti_results_keyword, reinit=True, name=global_config.run_name)
+        pass
+        #run = wandb.init(project=paths_config.pti_results_keyword, reinit=True, name=global_config.run_name)
     global_config.pivotal_training_steps = 1
     global_config.training_step = 1
 
