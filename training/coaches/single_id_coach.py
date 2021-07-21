@@ -47,12 +47,12 @@ class SingleIDCoach(BaseCoach):
 
             for i in tqdm(range(hyperparameters.max_pti_steps)):
 
-                self.optimizer.zero_grad()
+                
                 generated_images = self.forward(w_pivot)
                 loss, l2_loss_val, loss_lpips = self.calc_loss(generated_images, real_images_batch, image_name,
                                                                self.G, use_ball_holder, w_pivot)
 
-                
+                self.optimizer.zero_grad()
 
                 if loss_lpips <= hyperparameters.LPIPS_value_threshold:
                     break
