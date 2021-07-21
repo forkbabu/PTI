@@ -8,6 +8,7 @@ from criteria.localitly_regulizer import Space_Regulizer
 import torch
 from torchvision import transforms
 from lpips import LPIPS
+#from elpips import ELPIPS
 from training.projectors import w_projector
 from configs import global_config, paths_config, hyperparameters
 from criteria import l2_loss
