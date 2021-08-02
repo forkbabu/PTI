@@ -44,6 +44,7 @@ class SingleIDCoach(BaseCoach):
             torch.save(w_pivot, f'{embedding_dir}/0.pt')
             log_images_counter = 0
             real_images_batch = image.to(global_config.device)
+            print("Pivotal Tuning Starts")
 
             for i in tqdm(range(hyperparameters.max_pti_steps)):
 
