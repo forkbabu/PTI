@@ -90,7 +90,6 @@ class BaseCoach:
 
         else:
             id_image = torch.squeeze((image.to(global_config.device) + 1) / 2) * 255
-            print("Projecting to latent space the naive way")
             w = w_projector.project(self.G, id_image, device=torch.device(global_config.device), w_avg_samples=600,
                                     num_steps=hyperparameters.first_inv_steps, w_name=image_name,
                                     use_wandb=self.use_wandb)
@@ -115,7 +114,12 @@ class BaseCoach:
                 wandb.log({f'MSE_loss_val_{log_name}': l2_loss_val.detach().cpu()}, step=global_config.training_step)
             loss += l2_loss_val * hyperparameters.pt_l2_lambda
         if hyperparameters.pt_lpips_lambda > 0:
-            loss_lpips = torch.squeeze(self.elpips_loss(generated_images, real_images))
+            print(generated_images.get_device())
+            loss_lpips = self.elpips_loss(generated_images, real_images)
+            print(loss_lpips.get_device())
+            loss_lpips = torch.squeeze(loss_lpips)
+            print(loss_lpips.get_device())
+
 
             if self.use_wandb:
                 wandb.log({f'ELPIPS_loss_val_{log_name}': loss_lpips.detach().cpu()}, step=global_config.training_step)
