@@ -114,7 +114,7 @@ class BaseCoach:
                 wandb.log({f'MSE_loss_val_{log_name}': l2_loss_val.detach().cpu()}, step=global_config.training_step)
             loss += l2_loss_val * hyperparameters.pt_l2_lambda
         if hyperparameters.pt_lpips_lambda > 0:
-            loss_lpips = torch.Tensor(self.elpips_loss(generated_images, real_images))
+            loss_lpips = torch.Tensor(self.elpips_loss(generated_images, real_images),)
             loss_lpips = torch.squeeze(loss_lpips)
 
             if self.use_wandb:
