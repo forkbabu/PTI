@@ -34,7 +34,7 @@ class BaseCoach:
             transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
 
         # Initialize loss
-        self.elpips_loss = ELPIPS(transformations_list = hyperparameters.tlist,net=hyperparameters.lpips_type).to(global_config.device).eval()
+        self.elpips_loss = ELPIPS(net=hyperparameters.lpips_type,N_iters=hyperparameters.num_ensembles).to(global_config.device).eval()
 
         self.restart_training()
 
