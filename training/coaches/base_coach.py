@@ -7,7 +7,7 @@ import os.path
 from criteria.localitly_regulizer import Space_Regulizer
 import torch
 from torchvision import transforms
-from lpips import LPIPS,ELPIPS
+from lpips import LPIPS
 from training.projectors import w_projector
 from configs import global_config, paths_config, hyperparameters
 from criteria import l2_loss
@@ -34,7 +34,7 @@ class BaseCoach:
             transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
 
         # Initialize loss
-        self.elpips_loss = ELPIPS(net=hyperparameters.lpips_type,N_iters=hyperparameters.num_ensembles).to(global_config.device).eval()
+        self.elpips_loss = LPIPS(net=hyperparameters.lpips_type).to(global_config.device).eval()
 
         self.restart_training()
 
@@ -118,7 +118,7 @@ class BaseCoach:
             loss_lpips = torch.squeeze(loss_lpips)
 
             if self.use_wandb:
-                wandb.log({f'ELPIPS_loss_val_{log_name}': loss_lpips.detach().cpu()}, step=global_config.training_step)
+                wandb.log({f'LPIPS_loss_val_{log_name}': loss_lpips.detach().cpu()}, step=global_config.training_step)
             loss += loss_lpips * hyperparameters.pt_lpips_lambda
 
         if use_ball_holder and hyperparameters.use_locality_regularization:
