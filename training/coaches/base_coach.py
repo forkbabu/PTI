@@ -34,7 +34,7 @@ class BaseCoach:
             transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
 
         # Initialize loss
-        self.elpips_loss = LPIPS(net=hyperparameters.lpips_type).to(global_config.device).eval()
+        self.lpips_loss = LPIPS(net=hyperparameters.lpips_type).to(global_config.device).eval()
 
         self.restart_training()
 
@@ -50,7 +50,7 @@ class BaseCoach:
 
         self.original_G = load_old_G()
 
-        self.space_regulizer = Space_Regulizer(self.original_G, self.elpips_loss)
+        self.space_regulizer = Space_Regulizer(self.original_G, self.lpips_loss)
         self.optimizer = self.configure_optimizers()
 
     def get_inversion(self, w_path_dir, image_name, image):
@@ -114,7 +114,7 @@ class BaseCoach:
                 wandb.log({f'MSE_loss_val_{log_name}': l2_loss_val.detach().cpu()}, step=global_config.training_step)
             loss += l2_loss_val * hyperparameters.pt_l2_lambda
         if hyperparameters.pt_lpips_lambda > 0:
-            loss_lpips = torch.Tensor(self.elpips_loss(generated_images, real_images))
+            loss_lpips = self.lpips_loss(generated_images, real_images)
             loss_lpips = torch.squeeze(loss_lpips)
 
             if self.use_wandb:
