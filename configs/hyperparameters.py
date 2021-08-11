@@ -14,7 +14,6 @@ regulizer_alpha = 30
 ## Loss
 pt_l2_lambda = 1
 pt_lpips_lambda = 1
-num_ensembles = 10
 
 ## Steps
 LPIPS_value_threshold = 0.06
@@ -27,4 +26,3 @@ pti_learning_rate = 3e-4
 first_inv_lr = 5e-3
 train_batch_size = 1
 use_last_w_pivots = False
-

@@ -116,7 +116,6 @@ class BaseCoach:
         if hyperparameters.pt_lpips_lambda > 0:
             loss_lpips = self.lpips_loss(generated_images, real_images)
             loss_lpips = torch.squeeze(loss_lpips)
-
             if self.use_wandb:
                 wandb.log({f'LPIPS_loss_val_{log_name}': loss_lpips.detach().cpu()}, step=global_config.training_step)
             loss += loss_lpips * hyperparameters.pt_lpips_lambda
