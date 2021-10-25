@@ -26,7 +26,7 @@ def pre_process_images(raw_images_path):
     os.makedirs(paths_config.input_data_path, exist_ok=True)
     for image, name in zip(aligned_images, images_names):
         real_name = name.split('.')[0]
-        image.save(f'{paths_config.input_data_path}/{real_name}.jpeg')
+        image.save(f'{paths_config.input_data_path}/{real_name}.jpg')
 
     os.chdir(current_directory)
 
