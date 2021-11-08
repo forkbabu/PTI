@@ -9,7 +9,7 @@ from utils.alignment import align_face
 def pre_process_images(raw_images_path):
     current_directory = os.getcwd()
 
-    IMAGE_SIZE = 256
+    IMAGE_SIZE = 1024
     predictor = dlib.shape_predictor(paths_config.dlib)
     os.chdir(raw_images_path)
     images_names = glob.glob(f'*')
