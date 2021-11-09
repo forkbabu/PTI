@@ -14,6 +14,7 @@ from criteria import l2_loss
 from models.e4e.psp import pSp
 from utils.log_utils import log_image_from_w
 from utils.models_utils import toogle_grad, load_old_G
+from utils.segmentation import segloss
 
 
 class BaseCoach:
@@ -107,7 +108,10 @@ class BaseCoach:
 
     def calc_loss(self, generated_images, real_images, log_name, new_G, use_ball_holder, w_batch):
         loss = 0.0
-
+        if hyperparameters.pt_seg_lambda > 0:
+            seg_loss_val = segloss(generated_images,real_images)
+            if self.use_wandb:
+                wandb.log({f'Seg_loss_val_{log_name}': seg_loss_val.detach().cpu()}, step=global_config.training_step)
         if hyperparameters.pt_l2_lambda > 0:
             l2_loss_val = l2_loss.l2_loss(generated_images, real_images)
             if self.use_wandb:
@@ -124,7 +128,7 @@ class BaseCoach:
             ball_holder_loss_val = self.space_regulizer.space_regulizer_loss(new_G, w_batch, use_wandb=self.use_wandb)
             loss += ball_holder_loss_val
 
-        return loss, l2_loss_val, loss_lpips
+        return loss, l2_loss_val, loss_lpips, seg_loss_val
 
     def forward(self, w):
         generated_images = self.G.synthesis(w, noise_mode='const', force_fp32=True)
