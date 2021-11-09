@@ -137,8 +137,9 @@ This should be differentiable.
 from torch.autograd import Variable
 def segloss(generated_images,real_images):
     gen_mask  = evaluate_numpy(generated_images)
-    print(gen_mask.shape)
     real_mask = evaluate_numpy(real_images)
+    gen_mask = Variable(torch.from_numpy(gen_mask).view(1,3,1024,1024).type(torch.FloatTensor),requires_grad=True)
+    real_mask = torch.from_numpy(real_mask).view(1,3,1024,1024).type(torch.IntTensor)
     return dice_loss(gen_mask,real_mask)
 
 #evaluate(respth='/home/sayantan/seginstyle/face-parsing.PyTorch/res/test_res',dspth='/home/sayantan/seginstyle/face-parsing.PyTorch/data/test-img', cp='79999_iter.pth')
