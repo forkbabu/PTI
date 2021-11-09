@@ -19,7 +19,7 @@ pt_seg_lambda = 1
 ## Steps
 LPIPS_value_threshold = 0.06
 max_pti_steps = 350
-first_inv_steps = 10
+first_inv_steps = 450
 max_images_to_invert = 30
 
 ## Optimization
