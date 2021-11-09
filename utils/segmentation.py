@@ -12,7 +12,7 @@ import sys
 import logging
 
 import torch.distributed as dist
-
+import logging
 
 def setup_logger(logpth):
     logfile = 'BiSeNet-{}.log'.format(time.strftime('%Y-%m-%d-%H-%M-%S'))
@@ -24,11 +24,6 @@ def setup_logger(logpth):
     logging.basicConfig(level=log_level, format=FORMAT, filename=logfile)
     logging.root.addHandler(logging.StreamHandler())
 
-
-
-from model import BiSeNet
-import os
-import os.path as osp
 import numpy as np
 from PIL import Image
 import torchvision.transforms as transforms
