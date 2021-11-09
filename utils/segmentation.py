@@ -87,12 +87,12 @@ def vis_parsing_maps(parsing_anno, stride):
 
             vis_parsing_maps(image, parsing, stride=1, save_im=True, save_path=osp.join(respth, image_path))
 """
-def evaluate_numpy(arr, cp='model_final_diss.pth'):
+def evaluate_numpy(arr):
 
     n_classes = 19
     net = BiSeNet(n_classes=n_classes)
     net.cuda()
-    net.load_state_dict(torch.load("/home/sayantan/seginstyle/face-parsing.PyTorch/res/cp/model_final_diss.pth"))
+    net.load_state_dict(torch.load("/content/faceparse.pth"))
     net.eval()
 
     to_tensor = transforms.Compose([
