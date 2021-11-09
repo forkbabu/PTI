@@ -4,9 +4,28 @@ import glob
 import matplotlib.pyplot as plt
 import PIL
 import sys;sys.path.append("/home/sayantan/seginstyle/face-parsing.PyTorch/")
+from utils.model import BiSeNet
+
+import os.path as osp
+import time
+import sys
+import logging
+
+import torch.distributed as dist
 
 
-from logger import setup_logger
+def setup_logger(logpth):
+    logfile = 'BiSeNet-{}.log'.format(time.strftime('%Y-%m-%d-%H-%M-%S'))
+    logfile = osp.join(logpth, logfile)
+    FORMAT = '%(levelname)s %(filename)s(%(lineno)d): %(message)s'
+    log_level = logging.INFO
+    if dist.is_initialized() and not dist.get_rank()==0:
+        log_level = logging.ERROR
+    logging.basicConfig(level=log_level, format=FORMAT, filename=logfile)
+    logging.root.addHandler(logging.StreamHandler())
+
+
+
 from model import BiSeNet
 import os
 import os.path as osp
@@ -44,7 +63,7 @@ def vis_parsing_maps(parsing_anno, stride):
 
     return vis_parsing_anno_color
 
-def evaluate(respth='./res/test_res', dspth='./data', cp='model_final_diss.pth'):
+"""def evaluate(respth='./res/test_res', dspth='./data', cp='model_final_diss.pth'):
     if not os.path.exists(respth):
         os.makedirs(respth)
 
@@ -72,7 +91,7 @@ def evaluate(respth='./res/test_res', dspth='./data', cp='model_final_diss.pth')
             # print(np.unique(parsing))
 
             vis_parsing_maps(image, parsing, stride=1, save_im=True, save_path=osp.join(respth, image_path))
-
+"""
 def evaluate_numpy(arr, cp='model_final_diss.pth'):
 
     n_classes = 19
