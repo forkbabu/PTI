@@ -3,7 +3,6 @@ import torch.nn.functional as F
 import glob
 import matplotlib.pyplot as plt
 import PIL
-import sys;sys.path.append("/home/sayantan/seginstyle/face-parsing.PyTorch/")
 from utils.model import BiSeNet
 
 import os.path as osp
