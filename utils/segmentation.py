@@ -15,7 +15,7 @@ from PIL import Image
 import torchvision.transforms as transforms
 import cv2
 
-def vis_parsing_maps(im, parsing_anno, stride, save_im=False, save_path='vis_results/parsing_map_on_im.jpg'):
+def vis_parsing_maps(parsing_anno, stride):
     # Colors for all 20 parts
     part_colors = [[255, 0, 0], [255, 85, 0], [255, 170, 0],
                    [255, 0, 85], [255, 0, 170],
@@ -27,8 +27,7 @@ def vis_parsing_maps(im, parsing_anno, stride, save_im=False, save_path='vis_res
                    [255, 0, 255], [255, 85, 255], [255, 170, 255],
                    [0, 255, 255], [85, 255, 255], [170, 255, 255]]
 
-    im = np.array(im)
-    vis_im = im.copy().astype(np.uint8)
+    
     vis_parsing_anno = parsing_anno.copy().astype(np.uint8)
     vis_parsing_anno = cv2.resize(vis_parsing_anno, None, fx=stride, fy=stride, interpolation=cv2.INTER_NEAREST)
     vis_parsing_anno_color = np.zeros((vis_parsing_anno.shape[0], vis_parsing_anno.shape[1], 3)) + 255
@@ -41,14 +40,9 @@ def vis_parsing_maps(im, parsing_anno, stride, save_im=False, save_path='vis_res
 
     vis_parsing_anno_color = vis_parsing_anno_color.astype(np.uint8)
     # print(vis_parsing_anno_color.shape, vis_im.shape)
-    vis_im = cv2.addWeighted(cv2.cvtColor(vis_im, cv2.COLOR_RGB2BGR), 0.0, vis_parsing_anno_color, 1.0, 0)
+    #vis_im = cv2.addWeighted(cv2.cvtColor(vis_im, cv2.COLOR_RGB2BGR), 0.0, vis_parsing_anno_color, 1.0, 0)
 
-    # Save result or not
-    if save_im:
-        cv2.imwrite(save_path[:-4] +'.png', vis_parsing_anno)
-        cv2.imwrite(save_path, vis_im, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
-
-    return vis_im
+    return vis_parsing_anno_color
 
 def evaluate(respth='./res/test_res', dspth='./data', cp='model_final_diss.pth'):
     if not os.path.exists(respth):
@@ -102,7 +96,7 @@ def evaluate_numpy(arr, cp='model_final_diss.pth'):
         # print(parsing)
         # print(np.unique(parsing))
 
-        return vis_parsing_maps(image, parsing, stride=1, save_im=False, save_path=osp.join(respth, image_path))
+        return vis_parsing_maps(parsing, stride=1)
         
 
 
@@ -127,9 +121,10 @@ This should be differentiable.
     
     return 1 - ((2. * intersection + smooth) / (A_sum + B_sum + smooth) )
 
-
+from torch.autograd import Variable
 def segloss(generated_images,real_images):
     gen_mask  = evaluate_numpy(generated_images)
+    print(gen_mask.shape)
     real_mask = evaluate_numpy(real_images)
     return dice_loss(gen_mask,real_mask)
 
