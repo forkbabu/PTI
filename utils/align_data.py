@@ -17,11 +17,13 @@ def pre_process_images(raw_images_path):
     aligned_images = []
     for image_name in tqdm(images_names):
         try:
+            print("Aligning ")
             aligned_image = align_face(filepath=f'{raw_images_path}/{image_name}',
                                        predictor=predictor, output_size=IMAGE_SIZE)
             aligned_images.append(aligned_image)
         except Exception as e:
-            print(e)
+            print(f'{raw_images_path}/{image_name}')
+            break
 
     os.makedirs(paths_config.input_data_path, exist_ok=True)
     for image, name in zip(aligned_images, images_names):
