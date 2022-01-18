@@ -4,7 +4,7 @@ import glob
 import matplotlib.pyplot as plt
 import PIL
 from utils.model import BiSeNet
-
+from configs import paths_config
 import os.path as osp
 import time
 import sys
@@ -91,7 +91,7 @@ def evaluate_numpy(arr):
     n_classes = 19
     net = BiSeNet(n_classes=n_classes)
     net.cuda()
-    net.load_state_dict(torch.load("/home/sayantan/faceparse.pth"))
+    net.load_state_dict(torch.load(f'{paths.config.seg_path}'))
     net.eval()
 
     to_tensor = transforms.Compose([
