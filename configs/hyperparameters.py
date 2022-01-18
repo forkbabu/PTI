@@ -14,13 +14,13 @@ regulizer_alpha = 30
 ## Loss
 pt_l2_lambda = 1
 pt_lpips_lambda = 1
-pt_seg_lambda = 1
+pt_seg_lambda = 1.5
 
 ## Steps
 LPIPS_value_threshold = 0.06
 max_pti_steps = 350
 first_inv_steps = 450
-max_images_to_invert = 30
+max_images_to_invert = 300
 
 ## Optimization
 pti_learning_rate = 3e-4
