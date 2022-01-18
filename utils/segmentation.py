@@ -4,7 +4,7 @@ import glob
 import matplotlib.pyplot as plt
 import PIL
 from utils.model import BiSeNet
-import wandb
+
 import os.path as osp
 import time
 import sys
@@ -91,7 +91,7 @@ def evaluate_numpy(arr):
     n_classes = 19
     net = BiSeNet(n_classes=n_classes)
     net.cuda()
-    net.load_state_dict(torch.load("/content/faceparse.pth"))
+    net.load_state_dict(torch.load("/home/sayantan/faceparse.pth"))
     net.eval()
 
     to_tensor = transforms.Compose([
@@ -111,8 +111,6 @@ def evaluate_numpy(arr):
 
         return vis_parsing_maps(parsing, stride=1)
         
-
-
 def dice_loss(pred, target):
     """This definition generalize to real valued pred and target vector.
 This should be differentiable.
@@ -124,7 +122,7 @@ This should be differentiable.
 
     smooth = 1.
 
-    # have to use contiguous since they may from a torch.view op
+    # have to use contiguous since they may from a torch.view op 
     iflat = pred.contiguous().view(-1)
     tflat = target.contiguous().view(-1)
     intersection = (iflat * tflat).sum()
@@ -134,13 +132,38 @@ This should be differentiable.
     
     return 1 - ((2. * intersection + smooth) / (A_sum + B_sum + smooth) )
 
+def cw_dice_loss(pred, target):
+    """This definition generalize to real valued pred and target vector.
+This should be differentiable.
+
+    pred: tensor with first dimension as batch
+    target: tensor with first dimension as batch
+
+    """
+    weights = [0.03, 0.5, 0.21, 0.26]
+    classes = [0,85,170,255]
+
+    smooth = 1.
+    
+    # have to use contiguous since they may from a torch.view op 
+    iflat = pred.contiguous().view(-1)
+    tflat = target.contiguous().view(-1)
+    for i in range(len(classes)):
+      tflat.apply_(lambda x: x*weights[i] if x==classes[i] else x)
+    intersection = (iflat * tflat).sum()
+
+    A_sum = torch.sum(tflat)
+    B_sum = torch.sum(iflat)
+    
+    return 1 - ((2. * intersection + smooth) / (A_sum + B_sum + smooth) )
+
+
 from torch.autograd import Variable
 def segloss(generated_images,real_images):
     gen_mask  = evaluate_numpy(generated_images)
     real_mask = evaluate_numpy(real_images)
-   # wandb.log({"Segmentation": [wandb.Image(gen_mask, caption="generated image"),wandb.Image(real_mask, caption="real image")]})
     gen_mask = Variable(torch.from_numpy(gen_mask).view(1,3,1024,1024).type(torch.FloatTensor),requires_grad=True)
     real_mask = torch.from_numpy(real_mask).view(1,3,1024,1024).type(torch.IntTensor)
-    return dice_loss(gen_mask,real_mask)
+    return cw_dice_loss(gen_mask,real_mask)
 
 #evaluate(respth='/home/sayantan/seginstyle/face-parsing.PyTorch/res/test_res',dspth='/home/sayantan/seginstyle/face-parsing.PyTorch/data/test-img', cp='79999_iter.pth')
