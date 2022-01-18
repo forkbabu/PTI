@@ -29,3 +29,5 @@ interfacegan_age = 'editings/interfacegan_directions/age.pt'
 interfacegan_smile = 'editings/interfacegan_directions/smile.pt'
 interfacegan_rotation = 'editings/interfacegan_directions/rotation.pt'
 ffhq_pca = 'editings/ganspace_pca/ffhq_pca.pt'
+
+seg_path = "/content/faceparse.pth"
