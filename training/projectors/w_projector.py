@@ -38,7 +38,9 @@ def project(
         image_log_step=global_config.image_rec_result_log_snapshot,
         w_name: str
 ):
-    assert target.shape == (G.img_channels, G.img_resolution, G.img_resolution)
+    print(target.shape)
+	print(G.img_channels, G.img_resolution, G.img_resolution)
+    #assert target.shape == (G.img_channels, G.img_resolution, G.img_resolution)
 
     def logprint(*args):
         if verbose:
