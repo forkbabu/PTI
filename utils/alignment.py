@@ -14,6 +14,10 @@ def get_landmark(filepath, predictor):
 
     img = dlib.load_rgb_image(filepath)
     dets = detector(img, 1)
+    print(dets)
+
+    if len(dets) == 0:
+        raise ValueError("No face detected in the image")
 
     for k, d in enumerate(dets):
         shape = predictor(img, d)
@@ -24,7 +28,6 @@ def get_landmark(filepath, predictor):
         a.append([tt.x, tt.y])
     lm = np.array(a)
     return lm
-
 
 def align_face(filepath, predictor, output_size):
     """
