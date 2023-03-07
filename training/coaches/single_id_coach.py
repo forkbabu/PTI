@@ -61,9 +61,6 @@ class SingleIDCoach(BaseCoach):
 
                 use_ball_holder = global_config.training_step % hyperparameters.locality_regularization_interval == 0
 
-                if self.use_wandb and log_images_counter % global_config.image_rec_result_log_snapshot == 0:
-                    log_images_from_w([w_pivot], self.G, [image_name])
-
                 global_config.training_step += 1
                 log_images_counter += 1
 
