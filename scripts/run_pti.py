@@ -4,7 +4,6 @@ from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
 import os
 from configs import global_config, paths_config
-import wandb
 
 from training.coaches.multi_id_coach import MultiIDCoach
 from training.coaches.single_id_coach import SingleIDCoach
