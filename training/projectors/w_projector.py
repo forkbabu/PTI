@@ -39,8 +39,7 @@ def project(
         w_name: str
 ):
     print(target.shape)
-	print(G.img_channels, G.img_resolution, G.img_resolution)
-    #assert target.shape == (G.img_channels, G.img_resolution, G.img_resolution)
+    print(G.img_channels, G.img_resolution, G.img_resolution)
 
     def logprint(*args):
         if verbose:
