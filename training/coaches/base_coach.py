@@ -2,7 +2,7 @@ import abc
 import os
 import pickle
 from argparse import Namespace
-import wandb
+
 import os.path
 from criteria.localitly_regulizer import Space_Regulizer
 import torch
@@ -110,14 +110,11 @@ class BaseCoach:
 
         if hyperparameters.pt_l2_lambda > 0:
             l2_loss_val = l2_loss.l2_loss(generated_images, real_images)
-            if self.use_wandb:
-                wandb.log({f'MSE_loss_val_{log_name}': l2_loss_val.detach().cpu()}, step=global_config.training_step)
+            
             loss += l2_loss_val * hyperparameters.pt_l2_lambda
         if hyperparameters.pt_lpips_lambda > 0:
             loss_lpips = self.lpips_loss(generated_images, real_images)
             loss_lpips = torch.squeeze(loss_lpips)
-            if self.use_wandb:
-                wandb.log({f'LPIPS_loss_val_{log_name}': loss_lpips.detach().cpu()}, step=global_config.training_step)
             loss += loss_lpips * hyperparameters.pt_lpips_lambda
 
         if use_ball_holder and hyperparameters.use_locality_regularization:
@@ -147,6 +144,4 @@ class BaseCoach:
         new_image = self.e4e_image_transform(image[0]).to(global_config.device)
         _, w = self.e4e_inversion_net(new_image.unsqueeze(0), randomize_noise=False, return_latents=True, resize=False,
                                       input_code=False)
-        if self.use_wandb:
-            log_image_from_w(w, self.G, 'First e4e inversion')
         return w
