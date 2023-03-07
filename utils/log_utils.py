@@ -1,6 +1,6 @@
 import numpy as np
 from PIL import Image
-import wandb
+
 from configs import global_config
 import torch
 import matplotlib.pyplot as plt
@@ -9,10 +9,6 @@ import matplotlib.pyplot as plt
 def log_image_from_w(w, G, name):
     img = get_image_from_w(w, G)
     pillow_image = Image.fromarray(img)
-    wandb.log(
-        {f"{name}": [
-            wandb.Image(pillow_image, caption=f"current inversion {name}")]},
-        step=global_config.training_step)
 
 
 def log_images_from_w(ws, G, names):
