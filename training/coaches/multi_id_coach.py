@@ -65,8 +65,5 @@ class MultiIDCoach(BaseCoach):
                 global_config.training_step += 1
                 self.image_counter += 1
 
-        if self.use_wandb:
-            log_images_from_w(w_pivots, self.G, [image[0] for image in images])
-
         torch.save(self.G,
                    f'{paths_config.checkpoints_dir}/model_{global_config.run_name}_multi_id.pt')
